@@ -1,0 +1,1 @@
+const r=require("express").Router(),c=require("../controllers/searchController"),{optionalAuth}=require("../middleware/authMiddleware");r.get("/",optionalAuth,c.search);r.post("/",optionalAuth,c.search);module.exports=r;

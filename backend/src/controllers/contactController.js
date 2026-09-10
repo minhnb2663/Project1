@@ -1,0 +1,4 @@
+const Contact=require("../model/Contact");
+exports.create=async(req,res,next)=>{try{const {name,email,phone,subject,message}=req.body;if(!name?.trim()||!email?.trim()||!message?.trim()){const error=new Error("Vui lòng nhập họ tên, email và lời nhắn");error.statusCode=400;throw error}const data=await Contact.create({name,email,phone,subject,message});res.status(201).json({success:true,message:"ArtMind đã nhận được lời nhắn của bạn",data:{id:data._id,status:data.status}})}catch(error){next(error)}};
+exports.list=async(_req,res,next)=>{try{res.json({success:true,data:await Contact.find().sort("-createdAt").limit(100).lean()})}catch(error){next(error)}};
+exports.update=async(req,res,next)=>{try{const data=await Contact.findByIdAndUpdate(req.params.id,{status:req.body.status},{new:true,runValidators:true});if(!data){const error=new Error("Không tìm thấy lời nhắn");error.statusCode=404;throw error}res.json({success:true,data})}catch(error){next(error)}};

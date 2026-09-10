@@ -1,0 +1,402 @@
+.neoHome {
+  --orange: #ff4b00;
+  --red: #ed0041;
+  --dark: #132a30;
+  background: var(--dark);
+  color: #fff;
+  overflow: hidden;
+}
+.mainNav {
+  background: #12272ceb !important;
+  color: #fff;
+  border: 0 !important;
+}
+.mainNav a,
+.aiDropdown > button {
+  color: #fff;
+}
+.mainBrand > i,
+.loginLink {
+  background: #ff4b00 !important;
+  box-shadow: none !important;
+}
+.neoHero {
+  min-height: 780px;
+  position: relative;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 72% 12%, #00728c 0 12%, transparent 35%),
+    linear-gradient(110deg, #f50030 0 30%, #b30055 49%, #00536e 73%, #092e3b);
+}
+.neoHero:before,
+.neoHeroTexture {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.neoHero:before {
+  z-index: -1;
+  background:
+    linear-gradient(90deg, transparent 49.8%, #fff2 50%, transparent 50.2%),
+    linear-gradient(transparent 49.8%, #fff1 50%, transparent 50.2%);
+  background-size: 110px 110px;
+}
+.neoHeroTexture {
+  opacity: 0.3;
+  z-index: -1;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.38' numOctaves='5'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: screen;
+}
+.neoHeroIntro {
+  position: absolute;
+  z-index: 2;
+  top: 12%;
+  left: 8%;
+  max-width: 620px;
+}
+.neoHeroIntro > span,
+.neoManifestoTitle > span,
+.neoGallery header > span,
+.neoStudioCopy small {
+  font-size: 9px;
+  letter-spacing: 2.5px;
+  font-weight: 700;
+}
+.neoHeroIntro h1 {
+  font: 700 clamp(58px, 7vw, 110px)/0.85 var(--sans);
+  letter-spacing: -6px;
+  text-transform: uppercase;
+  margin: 25px 0;
+}
+.neoHeroIntro h1 em {
+  font: italic 500 0.7em var(--serif);
+  text-transform: none;
+  color: #ffc0af;
+}
+.neoHeroIntro p {
+  max-width: 390px;
+}
+.neoHeroIntro > a {
+  display: inline-flex;
+  gap: 35px;
+  margin-top: 16px;
+  padding: 13px 18px;
+  background: #fff;
+  color: #102a31;
+  font-size: 9px;
+  font-weight: 800;
+}
+.neoCircle {
+  position: absolute;
+  right: 29%;
+  top: 30%;
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  background: var(--orange);
+  display: grid;
+  place-items: center;
+  color: var(--dark);
+  font-weight: 800;
+  z-index: 5;
+}
+.neoPurpleBlock {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 38%;
+  height: 34%;
+  background: #7542a5cc;
+  display: flex;
+  align-items: flex-end;
+  padding: 4vw 5vw;
+}
+.neoPurpleBlock span {
+  font-size: 11px;
+  letter-spacing: 3px;
+}
+.neoPortrait {
+  position: absolute;
+  z-index: 4;
+  left: 30%;
+  bottom: -9%;
+  width: 29%;
+  height: 50%;
+  margin: 0;
+  box-shadow: 18px 20px #0d2025;
+}
+.neoPortrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(1.45) contrast(1.15);
+}
+.neoPortrait figcaption {
+  position: absolute;
+  bottom: 0;
+  background: var(--orange);
+  color: var(--dark);
+  padding: 7px 12px;
+  font-size: 7px;
+  font-weight: 800;
+}
+.neoStatement {
+  position: absolute;
+  right: 4%;
+  bottom: 8%;
+  width: 35%;
+  display: grid;
+  grid-template-columns: 0.6fr 1fr;
+  gap: 30px;
+  align-items: end;
+}
+.neoStatement > span {
+  font: 800 clamp(40px, 5vw, 75px)/0.72 var(--sans);
+  letter-spacing: -4px;
+}
+.neoStatement small {
+  font-size: 8px;
+  letter-spacing: 2px;
+  border-bottom: 2px solid;
+  padding-bottom: 8px;
+  display: block;
+}
+.neoStatement p {
+  font-size: 11px;
+}
+.neoScroll {
+  position: absolute;
+  right: 22px;
+  top: 43%;
+  writing-mode: vertical-rl;
+  font-size: 7px;
+  letter-spacing: 2px;
+}
+.neoScroll i {
+  color: var(--orange);
+  font-size: 20px;
+}
+.neoManifesto {
+  min-height: 400px;
+  padding: 115px 8vw 90px;
+  display: grid;
+  grid-template-columns: 1.25fr 0.65fr auto;
+  gap: 6vw;
+  align-items: end;
+}
+.neoManifestoTitle h2,
+.neoStudioCopy h2 {
+  font: 700 clamp(44px, 5vw, 76px)/0.95 var(--sans);
+  letter-spacing: -4px;
+  margin: 18px 0;
+}
+.neoManifestoTitle h2 i,
+.neoStudioCopy h2 i {
+  color: var(--orange);
+  font-family: var(--serif);
+  font-weight: 500;
+}
+.neoManifesto > p {
+  color: #b8c5c4;
+}
+.neoManifesto > a,
+.neoGallery header > a {
+  border-bottom: 2px solid var(--orange);
+  padding-bottom: 8px;
+  font-size: 9px;
+  font-weight: 800;
+}
+.neoGallery {
+  padding: 95px 5vw 120px;
+  background: #ecede7;
+  color: var(--dark);
+}
+.neoGallery > header {
+  display: grid;
+  grid-template-columns: 0.6fr 1fr auto;
+  align-items: end;
+  border-bottom: 2px solid;
+  padding-bottom: 20px;
+  margin-bottom: 50px;
+}
+.neoGallery header h2 {
+  font: 700 clamp(55px, 7vw, 100px)/0.8 var(--sans);
+  letter-spacing: -6px;
+  margin: 0;
+}
+.neoGallery header h2 i {
+  font-family: var(--serif);
+  font-weight: 500;
+  color: var(--red);
+}
+.neoGallery .editorialImage {
+  height: 440px;
+}
+.neoGallery .editorialImage img {
+  filter: saturate(1.25);
+}
+.neoGallery .editorialCard:nth-child(2),
+.neoGallery .editorialCard:nth-child(5) {
+  margin-top: 85px;
+}
+.neoGallery .editorialImage > span {
+  background: var(--orange);
+}
+.neoPreviewGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+.neoPreviewGrid img {
+  height: 500px;
+  width: 100%;
+  object-fit: cover;
+}
+.neoPreviewGrid img:nth-child(2) {
+  margin-top: 70px;
+}
+.neoStudio {
+  min-height: 700px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: linear-gradient(120deg, #006986, #082e3c);
+}
+.neoStudioArt {
+  position: relative;
+  overflow: hidden;
+}
+.neoStudioArt img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(1.5) contrast(1.2);
+}
+.neoStudioArt > span {
+  position: absolute;
+  right: -10px;
+  bottom: -35px;
+  font: 800 220px/0.8 var(--sans);
+  color: var(--orange);
+  letter-spacing: -20px;
+}
+.neoStudioCopy {
+  padding: 10vw 8vw;
+  align-self: center;
+}
+.neoStudioCopy > p {
+  color: #c4d2d2;
+}
+.neoStudioCopy > div {
+  display: flex;
+  gap: 12px;
+  margin-top: 35px;
+  flex-wrap: wrap;
+}
+.neoStudioCopy a {
+  padding: 13px 16px;
+  border: 1px solid;
+  font-size: 8px;
+  font-weight: 800;
+}
+.neoStudioCopy a:first-child {
+  background: var(--orange);
+  border-color: var(--orange);
+  color: var(--dark);
+}
+@media (max-width: 900px) {
+  .neoPortrait {
+    left: 40%;
+    width: 38%;
+  }
+  .neoStatement {
+    width: 48%;
+  }
+  .neoManifesto {
+    grid-template-columns: 1fr 1fr;
+  }
+  .neoManifesto > a {
+    grid-column: 2;
+  }
+  .neoGallery > header {
+    grid-template-columns: 1fr auto;
+  }
+  .neoGallery > header > span {
+    grid-column: 1/-1;
+    margin-bottom: 25px;
+  }
+}
+@media (max-width: 600px) {
+  .neoHero {
+    min-height: 820px;
+  }
+  .neoHeroIntro {
+    top: 8%;
+    left: 20px;
+    right: 20px;
+  }
+  .neoHeroIntro h1 {
+    font-size: 51px;
+    letter-spacing: -3px;
+  }
+  .neoCircle {
+    width: 65px;
+    height: 65px;
+    right: 7%;
+    top: 38%;
+  }
+  .neoPurpleBlock {
+    width: 60%;
+    height: 27%;
+  }
+  .neoPortrait {
+    left: 19%;
+    width: 65%;
+    height: 43%;
+    bottom: -4%;
+  }
+  .neoStatement,
+  .neoScroll {
+    display: none;
+  }
+  .neoManifesto {
+    padding: 95px 22px 65px;
+    grid-template-columns: 1fr;
+  }
+  .neoManifesto > a {
+    grid-column: 1;
+  }
+  .neoGallery {
+    padding: 70px 20px;
+  }
+  .neoGallery > header {
+    grid-template-columns: 1fr;
+  }
+  .neoGallery header h2 {
+    font-size: 61px;
+    margin: 18px 0;
+  }
+  .neoGallery .artGrid,
+  .neoPreviewGrid {
+    grid-template-columns: 1fr;
+  }
+  .neoGallery .editorialCard {
+    grid-column: 1;
+  }
+  .neoGallery .editorialCard:nth-child(n),
+  .neoPreviewGrid img:nth-child(2) {
+    margin-top: 0;
+  }
+  .neoStudio {
+    grid-template-columns: 1fr;
+  }
+  .neoStudioArt {
+    min-height: 430px;
+  }
+  .neoStudioCopy {
+    padding: 70px 22px;
+  }
+  .neoStudioArt > span {
+    font-size: 150px;
+  }
+}

@@ -1,0 +1,3 @@
+const sharp=require("sharp");
+const names=[{n:"black",c:[0,0,0]},{n:"white",c:[255,255,255]},{n:"red",c:[220,40,40]},{n:"green",c:[40,170,70]},{n:"blue",c:[40,90,210]},{n:"yellow",c:[230,210,50]},{n:"brown",c:[130,80,40]},{n:"gray",c:[130,130,130]}];
+exports.analyze=async buffer=>{const {dominant}=await sharp(buffer).stats();const color=names.sort((a,b)=>a.c.reduce((s,x,i)=>s+(x-dominant["rgb"[i]])**2,0)-b.c.reduce((s,x,i)=>s+(x-dominant["rgb"[i]])**2,0))[0].n;const vi={black:"Đen",white:"Trắng",red:"Đỏ",green:"Xanh lá",blue:"Xanh dương",yellow:"Vàng",brown:"Nâu",gray:"Xám"}[color];return{dominantColors:[vi],style:"Chưa xác định",category:"Chưa phân loại",confidence:0.35,tags:[color,"painting"]};};

@@ -1,0 +1,1 @@
+const r=require("express").Router(),c=require("../controllers/imageRecognitionController"),upload=require("../middleware/uploadMiddleware"),{optionalAuth}=require("../middleware/authMiddleware");r.post("/recognize",optionalAuth,upload.single("image"),c.recognize);module.exports=r;

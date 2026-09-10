@@ -1,0 +1,1 @@
+const r=require("express").Router(),c=require("../controllers/dashboardController"),{protect}=require("../middleware/authMiddleware");r.get("/",protect,c.get);r.get("/trending",c.trending);module.exports=r;

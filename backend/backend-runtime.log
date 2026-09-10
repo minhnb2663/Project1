@@ -1,0 +1,7 @@
+
+> my-node-project@1.0.0 start
+> node src/server.js
+
+◇ injected env (8) from .env // tip: ⌁ auth for agents [www.vestauth.com]
+✅ Kết nối MongoDB thành công!
+Server running at http://localhost:5000

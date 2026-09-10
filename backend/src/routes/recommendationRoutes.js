@@ -1,0 +1,1 @@
+const r=require("express").Router(),c=require("../controllers/recommendationController"),{protect}=require("../middleware/authMiddleware");r.get("/me",protect,c.mine);r.get("/similar/:id",c.similar);module.exports=r;

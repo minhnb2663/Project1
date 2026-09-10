@@ -1,0 +1,17 @@
+const express = require("express");
+const path = require("path");
+const cors = require("cors");
+const errorHandler = require("./middleware/errorMiddleware");
+const app = express();
+app.disable("x-powered-by");
+app.use(cors({ origin: process.env.CLIENT_URL?.split(",") || true, credentials: true }));
+app.use(express.json({ limit: "2mb" }));
+app.use(express.urlencoded({ extended: true }));
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+app.get("/api/health", (_req, res) => res.json({ success: true, message: "ArtMind AI Portal API đang hoạt động" }));
+for (const [url, file] of [["auth","authRoutes"],["categories","categoryRoutes"],["paintings","paintingRoutes"],["collections","collectionRoutes"],["orders","orderRoutes"],["search","searchRoutes"],["images","imageRoutes"],["recommendations","recommendationRoutes"],["dashboard","dashboardRoutes"],["analytics","analyticsRoutes"],["chatbot","chatbotRoutes"]]) app.use(`/api/${url}`, require(`./routes/${file}`));
+app.use("/api/contact",require("./routes/contactRoutes"));
+app.use("/api/artists",require("./routes/artistRoutes"));
+app.use((_req, res) => res.status(404).json({ success: false, message: "Không tìm thấy đường dẫn API" }));
+app.use(errorHandler);
+module.exports = app;

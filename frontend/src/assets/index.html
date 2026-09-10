@@ -1,0 +1,733 @@
+<!doctype html>
+
+<html class="dark" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>ArtMind AI Portal - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&amp;family=Playfair+Display:wght@500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-primary-fixed": "#1c1b1b",
+              "tertiary-fixed-dim": "#cebdff",
+              "on-secondary-fixed": "#1a1c1d",
+              "on-error": "#690005",
+              "on-primary": "#313030",
+              "outline-variant": "#444748",
+              "surface-container-lowest": "#0e0e0e",
+              "secondary-fixed-dim": "#c6c6c8",
+              "on-tertiary-fixed": "#21005e",
+              "on-surface": "#e4e2e1",
+              "inverse-on-surface": "#303030",
+              "surface-variant": "#353535",
+              "primary-container": "#121212",
+              "surface-bright": "#393939",
+              "inverse-primary": "#5f5e5e",
+              "on-background": "#e4e2e1",
+              "secondary-container": "#454749",
+              "on-secondary-fixed-variant": "#454749",
+              "inverse-surface": "#e4e2e1",
+              "on-primary-fixed-variant": "#474646",
+              background: "#131313",
+              "surface-dim": "#131313",
+              "on-secondary-container": "#b4b5b7",
+              "surface-container-low": "#1b1c1c",
+              "surface-container-high": "#2a2a2a",
+              surface: "#131313",
+              "tertiary-fixed": "#e8ddff",
+              "on-primary-container": "#7e7d7d",
+              tertiary: "#cebdff",
+              primary: "#c8c6c5",
+              "on-error-container": "#ffdad6",
+              "primary-fixed": "#e5e2e1",
+              "on-tertiary-container": "#876bd7",
+              "surface-container": "#1f2020",
+              outline: "#8e9192",
+              "error-container": "#93000a",
+              "on-tertiary-fixed-variant": "#4f319c",
+              "tertiary-container": "#160045",
+              "primary-fixed-dim": "#c8c6c5",
+              "surface-container-highest": "#353535",
+              "on-tertiary": "#381385",
+              "on-surface-variant": "#c4c7c7",
+              secondary: "#c6c6c8",
+              "on-secondary": "#2f3132",
+              "surface-tint": "#c8c6c5",
+              error: "#ffb4ab",
+              "secondary-fixed": "#e2e2e4",
+            },
+            borderRadius: {
+              DEFAULT: "0.125rem",
+              lg: "0.25rem",
+              xl: "0.5rem",
+              full: "0.75rem",
+            },
+            spacing: {
+              "margin-desktop": "64px",
+              unit: "8px",
+              "margin-mobile": "20px",
+              gutter: "24px",
+              "container-max": "1440px",
+            },
+            fontFamily: {
+              "label-sm": ["Hanken Grotesk"],
+              "headline-lg": ["Playfair Display"],
+              "body-md": ["Hanken Grotesk"],
+              "label-md": ["Hanken Grotesk"],
+              "display-lg": ["Playfair Display"],
+              "headline-md": ["Playfair Display"],
+              "headline-lg-mobile": ["Playfair Display"],
+              "body-lg": ["Hanken Grotesk"],
+            },
+            fontSize: {
+              "label-sm": [
+                "12px",
+                {
+                  lineHeight: "16px",
+                  letterSpacing: "0.03em",
+                  fontWeight: "500",
+                },
+              ],
+              "headline-lg": [
+                "40px",
+                { lineHeight: "48px", fontWeight: "600" },
+              ],
+              "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+              "label-md": [
+                "14px",
+                {
+                  lineHeight: "20px",
+                  letterSpacing: "0.05em",
+                  fontWeight: "600",
+                },
+              ],
+              "display-lg": [
+                "64px",
+                {
+                  lineHeight: "72px",
+                  letterSpacing: "-0.02em",
+                  fontWeight: "700",
+                },
+              ],
+              "headline-md": [
+                "28px",
+                { lineHeight: "36px", fontWeight: "500" },
+              ],
+              "headline-lg-mobile": [
+                "32px",
+                { lineHeight: "40px", fontWeight: "600" },
+              ],
+              "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        background-color: theme("colors.background");
+        color: theme("colors.on-background");
+      }
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .art-card:hover .art-overlay {
+        transform: translateY(0);
+      }
+      .art-overlay {
+        transform: translateY(100%);
+        transition: transform 0.3s ease-in-out;
+      }
+      /* Hide scrollbar for clean look but allow scrolling */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: theme("colors.surface-container-highest");
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body class="antialiased min-h-screen flex">
+    <!-- SideNavBar -->
+    <nav
+      class="fixed left-0 top-0 h-full w-64 z-50 border-r border-white/5 backdrop-blur-2xl bg-surface-container/30 flex flex-col py-8 gap-6 hidden md:flex"
+    >
+      <div class="px-6 mb-4">
+        <h1 class="font-headline-md text-headline-md text-on-surface">
+          ArtMind AI
+        </h1>
+        <p class="font-label-sm text-label-sm text-tertiary">Digital Curator</p>
+      </div>
+      <div class="flex-1 flex flex-col gap-2 px-4">
+        <a
+          class="flex items-center gap-4 py-3 rounded-lg text-tertiary border-l-2 border-tertiary pl-4 bg-tertiary/5 hover:bg-surface-variant/20 transition-all active:translate-x-1 duration-150 group"
+          href="#"
+        >
+          <span
+            class="material-symbols-outlined font-label-md text-label-md"
+            style="font-variation-settings: &quot;wght&quot; 300"
+            >dashboard</span
+          >
+          <span class="font-label-md text-label-md">Overview</span>
+        </a>
+        <a
+          class="flex items-center gap-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface pl-4 hover:bg-surface-variant/20 transition-all active:translate-x-1 duration-150 group"
+          href="#"
+        >
+          <span
+            class="material-symbols-outlined font-label-md text-label-md"
+            style="font-variation-settings: &quot;wght&quot; 300"
+            >explore</span
+          >
+          <span class="font-label-md text-label-md">Explore</span>
+        </a>
+        <a
+          class="flex items-center gap-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface pl-4 hover:bg-surface-variant/20 transition-all active:translate-x-1 duration-150 group"
+          href="#"
+        >
+          <span
+            class="material-symbols-outlined font-label-md text-label-md"
+            style="font-variation-settings: &quot;wght&quot; 300"
+            >query_stats</span
+          >
+          <span class="font-label-md text-label-md">AI Analysis</span>
+        </a>
+        <a
+          class="flex items-center gap-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface pl-4 hover:bg-surface-variant/20 transition-all active:translate-x-1 duration-150 group"
+          href="#"
+        >
+          <span
+            class="material-symbols-outlined font-label-md text-label-md"
+            style="font-variation-settings: &quot;wght&quot; 300"
+            >smart_toy</span
+          >
+          <span class="font-label-md text-label-md">Chatbot</span>
+        </a>
+        <a
+          class="flex items-center gap-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface pl-4 hover:bg-surface-variant/20 transition-all active:translate-x-1 duration-150 group"
+          href="#"
+        >
+          <span
+            class="material-symbols-outlined font-label-md text-label-md"
+            style="font-variation-settings: &quot;wght&quot; 300"
+            >favorite</span
+          >
+          <span class="font-label-md text-label-md">Favorites</span>
+        </a>
+        <a
+          class="flex items-center gap-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface pl-4 hover:bg-surface-variant/20 transition-all active:translate-x-1 duration-150 group"
+          href="#"
+        >
+          <span
+            class="material-symbols-outlined font-label-md text-label-md"
+            style="font-variation-settings: &quot;wght&quot; 300"
+            >settings</span
+          >
+          <span class="font-label-md text-label-md">Settings</span>
+        </a>
+      </div>
+      <div class="px-6 mt-auto">
+        <button
+          class="w-full py-3 rounded-full bg-surface-container-high border border-white/10 text-on-surface font-label-md text-label-md hover:bg-surface-variant transition-colors flex items-center justify-center gap-2"
+        >
+          <span>Upgrade to Curator Pro</span>
+          <span class="material-symbols-outlined" style="font-size: 16px"
+            >arrow_forward</span
+          >
+        </button>
+      </div>
+    </nav>
+    <!-- Main Content Area -->
+    <div class="flex-1 md:ml-64 flex flex-col min-h-screen relative">
+      <!-- TopNavBar -->
+      <header
+        class="w-full sticky top-0 z-50 border-b border-white/10 backdrop-blur-xl bg-surface/80 flex justify-between items-center px-margin-desktop h-20 w-full md:px-margin-desktop px-margin-mobile"
+      >
+        <div class="flex items-center gap-4 hidden md:flex">
+          <div class="relative">
+            <span
+              class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant"
+              style="font-size: 20px"
+              >search</span
+            >
+            <input
+              class="bg-surface-container/50 border border-white/10 rounded-full py-2 pl-10 pr-4 text-on-surface font-body-md text-body-md focus:outline-none focus:border-tertiary transition-colors w-64 placeholder:text-on-surface-variant/50"
+              placeholder="Search curated collections..."
+              type="text"
+            />
+          </div>
+        </div>
+        <div class="flex md:hidden items-center">
+          <h2
+            class="font-headline-md text-headline-lg-mobile font-bold text-on-surface"
+          >
+            ArtMind AI Portal
+          </h2>
+        </div>
+        <div class="flex items-center gap-6">
+          <button
+            class="text-on-surface-variant hover:bg-surface-variant/50 transition-colors rounded-full p-2 scale-95 duration-200"
+          >
+            <span class="material-symbols-outlined">notifications</span>
+          </button>
+          <button
+            class="text-on-surface-variant hover:bg-surface-variant/50 transition-colors rounded-full p-2 scale-95 duration-200"
+          >
+            <span class="material-symbols-outlined">history</span>
+          </button>
+          <div
+            class="h-10 w-10 rounded-full overflow-hidden border border-white/10 shrink-0 cursor-pointer"
+          >
+            <img
+              alt="User profile avatar"
+              class="w-full h-full object-cover"
+              data-alt="A close-up portrait of a sophisticated AI persona, rendered in dark, elegant tones with subtle violet bioluminescent accents on the skin, conveying a high-tech yet artistic mood."
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDabW71bQRMP-JfgEtrlU2drXPySDLYcPPggES2UBtCfFOITkQ6TTmUkeTVwN1IGGjFbi9-y2KdBozr3G_Cf-AG2iDhm89IMzwG5G2deK7uvW-AnFX8mLKqNbpWL-0IyAHRwhqok8FXZhaRHwnz3EdG4nAaizy0cIoiReCLOE1snTN071mn1aL1qk69469Av5VHG5JvxzlGLjVhdUwT7xdiH5C6UJjTRQ79fK1VvjDBVbsJdnGI-x56"
+            />
+          </div>
+        </div>
+      </header>
+      <!-- Dashboard Content -->
+      <main
+        class="flex-1 p-margin-mobile md:p-margin-desktop max-w-container-max mx-auto w-full flex flex-col gap-12 pb-24"
+      >
+        <!-- Hero Section -->
+        <section class="flex flex-col lg:flex-row gap-8 items-stretch">
+          <div class="flex-1 flex flex-col justify-center gap-4">
+            <h2
+              class="font-display-lg text-display-lg text-on-surface leading-tight"
+            >
+              Good morning,<br /><span
+                class="text-tertiary font-headline-lg italic"
+                >Curator</span
+              >
+            </h2>
+            <p
+              class="font-body-lg text-body-lg text-on-surface-variant max-w-lg mt-2"
+            >
+              Your AI engine has analyzed 4,200 new auction lots overnight. Here
+              is your daily curated intelligence briefing.
+            </p>
+          </div>
+          <div
+            class="flex-1 relative rounded-2xl overflow-hidden min-h-[300px] lg:min-h-[400px] group cursor-pointer border border-white/10"
+          >
+            <img
+              alt="Featured Artwork"
+              class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              data-alt="A highly detailed, majestic classical painting in the style of Rembrandt, depicting a solitary figure illuminated by a single, dramatic light source against a deeply shadowed, textured background. The rich, dark color palette is sophisticated and moody, perfectly fitting a high-end digital art gallery interface."
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuACLUSxM9Iel3IAP7wZxObvPFsCWqoxKM4TU2FVUhJdVSjbLin19PtydEGHpGtCbB1LY42mVln3sCaOd6-k0Gi_vU20wG8Flw0IrNgcTfRIqI5xreTG2OVTkrSOLttdA5MsBTR-RTSSSoHwHr9LEwIUghcKFRkoULpavlXt8t0fElUe86UMNAdlPrtWMlJwWEqnCpEkFGTgZms-IrNKJvkCUH9UdI1Bd4XvB93wBRtp4BqawDKU_5h_"
+            />
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"
+            ></div>
+            <div class="absolute bottom-0 left-0 p-8 w-full">
+              <div
+                class="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-panel mb-4"
+              >
+                <span
+                  class="material-symbols-outlined text-tertiary"
+                  style="font-size: 14px"
+                  >auto_awesome</span
+                >
+                <span class="font-label-sm text-label-sm text-on-surface"
+                  >Daily Discovery</span
+                >
+              </div>
+              <h3
+                class="font-headline-lg text-headline-lg text-on-surface mb-1"
+              >
+                Study in Chiaroscuro #4
+              </h3>
+              <p class="font-body-md text-body-md text-on-surface-variant mb-4">
+                Attributed AI Match: 94% Dutch Golden Age
+              </p>
+              <button
+                class="bg-surface-on px-6 py-2 rounded-full font-label-md text-label-md text-primary-container bg-primary hover:bg-white transition-colors"
+              >
+                Analyze Canvas
+              </button>
+            </div>
+          </div>
+        </section>
+        <!-- Stats/Insights Row -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <!-- Stat Card 1 -->
+          <div class="glass-panel p-6 rounded-xl flex flex-col gap-4">
+            <div class="flex justify-between items-start">
+              <div
+                class="p-2 rounded-lg bg-surface-container-high text-tertiary"
+              >
+                <span class="material-symbols-outlined">palette</span>
+              </div>
+              <span class="font-label-sm text-label-sm text-on-surface-variant"
+                >+2% shift</span
+              >
+            </div>
+            <div>
+              <h4
+                class="font-label-md text-label-md text-on-surface-variant mb-1"
+              >
+                Style Preference
+              </h4>
+              <p class="font-headline-md text-headline-md text-on-surface">
+                60% Impressionism
+              </p>
+            </div>
+            <div
+              class="w-full bg-surface-container-highest h-1 rounded-full overflow-hidden mt-2"
+            >
+              <div class="bg-tertiary h-full w-[60%] rounded-full"></div>
+            </div>
+          </div>
+          <!-- Stat Card 2 -->
+          <div class="glass-panel p-6 rounded-xl flex flex-col gap-4">
+            <div class="flex justify-between items-start">
+              <div
+                class="p-2 rounded-lg bg-surface-container-high text-tertiary"
+              >
+                <span class="material-symbols-outlined">account_balance</span>
+              </div>
+              <span class="font-label-sm text-label-sm text-on-surface-variant"
+                >Estimated</span
+              >
+            </div>
+            <div>
+              <h4
+                class="font-label-md text-label-md text-on-surface-variant mb-1"
+              >
+                Collection Value
+              </h4>
+              <p class="font-headline-md text-headline-md text-on-surface">
+                $1.2M - $1.5M
+              </p>
+            </div>
+            <div
+              class="mt-auto flex items-center gap-2 text-tertiary font-label-sm text-label-sm"
+            >
+              <span class="material-symbols-outlined" style="font-size: 16px"
+                >trending_up</span
+              >
+              <span>+4.2% this quarter</span>
+            </div>
+          </div>
+          <!-- Stat Card 3 -->
+          <div
+            class="glass-panel p-6 rounded-xl flex flex-col gap-4 relative overflow-hidden"
+          >
+            <div
+              class="absolute -right-4 -top-4 w-24 h-24 bg-tertiary/10 rounded-full blur-2xl"
+            ></div>
+            <div class="flex justify-between items-start relative z-10">
+              <div
+                class="p-2 rounded-lg bg-surface-container-high text-tertiary"
+              >
+                <span class="material-symbols-outlined">insights</span>
+              </div>
+            </div>
+            <div class="relative z-10">
+              <h4
+                class="font-label-md text-label-md text-on-surface-variant mb-1"
+              >
+                AI Discoveries
+              </h4>
+              <p class="font-headline-md text-headline-md text-on-surface">
+                14 New Artists
+              </p>
+            </div>
+            <div class="mt-auto relative z-10">
+              <a
+                class="text-tertiary font-label-sm text-label-sm hover:underline inline-flex items-center gap-1"
+                href="#"
+                >View monthly report
+                <span class="material-symbols-outlined" style="font-size: 14px"
+                  >arrow_forward</span
+                ></a
+              >
+            </div>
+          </div>
+        </section>
+        <!-- Main Content & Sidebar Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <!-- Grid Area -->
+          <section class="lg:col-span-8 flex flex-col gap-6">
+            <div class="flex justify-between items-end mb-2">
+              <h3 class="font-headline-md text-headline-md text-on-surface">
+                AI Recommended
+              </h3>
+              <div class="flex gap-2">
+                <button
+                  class="p-2 rounded-lg border border-white/10 hover:bg-surface-variant transition-colors text-on-surface"
+                >
+                  <span
+                    class="material-symbols-outlined"
+                    style="font-size: 20px"
+                    >tune</span
+                  >
+                </button>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Art Card 1 -->
+              <div
+                class="art-card rounded-xl overflow-hidden relative aspect-[4/5] bg-surface-container cursor-pointer border border-white/5"
+              >
+                <img
+                  alt="Recommended Art 1"
+                  class="w-full h-full object-cover"
+                  data-alt="A modern, abstract digital painting featuring sweeping strokes of deep violet and charcoal, interspersed with sharp, geometric lines of pure white light. The composition feels energetic yet structured, embodying the intersection of AI generation and traditional abstract expressionism."
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYZ51wKhxTFuph25CpLBLEThpMJoXMNPgU_18gXOIvA9_k0r5D5snkog2iZNfjQ1YmO1FhAS2ugvPZJgQMfQzpxG8XJPqril5KkUq_EX-3T_rfsM5FIdjkTYdfgMI6aRUM0P8eQ202W3Slg83RgWGTN61Mp8RZseLbsVcC2UpDaUAHp9xvPQUCmVjyguznewzvzMMlq-BBjkDXBI5wxvP-5cboUK1kvEfcjAxZoYfKffHzO0RCY-75"
+                />
+                <div class="absolute top-4 left-4">
+                  <span
+                    class="glass-panel px-3 py-1 rounded-full font-label-sm text-label-sm text-on-surface"
+                    >Based on History</span
+                  >
+                </div>
+                <div
+                  class="art-overlay absolute inset-x-0 bottom-0 glass-panel p-6 flex flex-col gap-2 border-t border-white/10 rounded-t-xl"
+                >
+                  <h4
+                    class="font-body-lg text-body-lg text-on-surface font-semibold"
+                  >
+                    Algorithmic Reverie II
+                  </h4>
+                  <p
+                    class="font-label-sm text-label-sm text-on-surface-variant"
+                  >
+                    Generative / Contemporary
+                  </p>
+                  <div class="mt-2 flex justify-between items-center">
+                    <span class="font-label-md text-label-md text-tertiary"
+                      >98% Match</span
+                    >
+                    <button
+                      class="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center hover:bg-white/10 transition-colors"
+                    >
+                      <span
+                        class="material-symbols-outlined"
+                        style="font-size: 16px"
+                        >bookmark_add</span
+                      >
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <!-- Art Card 2 -->
+              <div
+                class="art-card rounded-xl overflow-hidden relative aspect-[4/5] bg-surface-container cursor-pointer border border-white/5"
+              >
+                <img
+                  alt="Recommended Art 2"
+                  class="w-full h-full object-cover"
+                  data-alt="A serene landscape painting heavily influenced by early Impressionism, featuring a misty morning over a calm body of water. The color palette utilizes muted grays, soft blues, and subtle hints of lavender, reflecting the overarching sophisticated and calm dark mode aesthetic of the gallery."
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqHGX8EC7iXx51uFuAhdmeLAbOIk2o7fJcBYHtdquR2qCo19TP-dneCAWMYnQ9KC_DD_1LQ9wYY_n1_ED1dWWiwXh9CIAXDviy8CDoP5tIZtJ9JDNHjfbW1sOudCYiXu-Fu-I3ioXQf8EvmlQ7pwvsE4FvflUFMvcpydo439aIzQLEF611ZGjoY0iPLksjlwB3O8QYZrTUqq4UI2lxBBXKkaFHq1y_sBOr2c7kSjPTvJv2wl3J0OBU"
+                />
+                <div class="absolute top-4 left-4">
+                  <span
+                    class="glass-panel px-3 py-1 rounded-full font-label-sm text-label-sm text-on-surface"
+                    >Trending Impressionism</span
+                  >
+                </div>
+                <div
+                  class="art-overlay absolute inset-x-0 bottom-0 glass-panel p-6 flex flex-col gap-2 border-t border-white/10 rounded-t-xl"
+                >
+                  <h4
+                    class="font-body-lg text-body-lg text-on-surface font-semibold"
+                  >
+                    Morning Haze, Giverny
+                  </h4>
+                  <p
+                    class="font-label-sm text-label-sm text-on-surface-variant"
+                  >
+                    Oil on Canvas / 1892
+                  </p>
+                  <div class="mt-2 flex justify-between items-center">
+                    <span class="font-label-md text-label-md text-tertiary"
+                      >85% Match</span
+                    >
+                    <button
+                      class="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center hover:bg-white/10 transition-colors"
+                    >
+                      <span
+                        class="material-symbols-outlined"
+                        style="font-size: 16px"
+                        >bookmark_add</span
+                      >
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+          <!-- Tools Sidebar -->
+          <aside class="lg:col-span-4 flex flex-col gap-6">
+            <h3 class="font-headline-md text-headline-md text-on-surface mb-2">
+              Quick Intelligence
+            </h3>
+            <!-- Tool 1: Drop Zone -->
+            <div
+              class="glass-panel border border-tertiary/30 border-dashed rounded-xl p-8 flex flex-col items-center justify-center text-center gap-4 hover:bg-tertiary/5 transition-colors cursor-pointer group"
+            >
+              <div
+                class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center group-hover:scale-110 transition-transform"
+              >
+                <span class="material-symbols-outlined text-tertiary text-3xl"
+                  >upload_file</span
+                >
+              </div>
+              <div>
+                <h4
+                  class="font-body-md text-body-md font-semibold text-on-surface"
+                >
+                  Drop image to analyze
+                </h4>
+                <p
+                  class="font-label-sm text-label-sm text-on-surface-variant mt-1"
+                >
+                  AI will detect style, era, and brushwork
+                </p>
+              </div>
+            </div>
+            <!-- Tool 2: AI Chat CTA -->
+            <div
+              class="rounded-xl p-[1px] bg-gradient-to-br from-tertiary/50 to-transparent relative overflow-hidden"
+            >
+              <div
+                class="absolute top-0 right-0 w-32 h-32 bg-tertiary/20 blur-3xl rounded-full"
+              ></div>
+              <div
+                class="bg-surface-container h-full w-full rounded-[11px] p-6 flex flex-col gap-4 relative z-10"
+              >
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-10 h-10 rounded-full bg-tertiary/20 flex items-center justify-center text-tertiary"
+                  >
+                    <span class="material-symbols-outlined">smart_toy</span>
+                  </div>
+                  <h4
+                    class="font-body-md text-body-md font-semibold text-on-surface"
+                  >
+                    AI Curator Chat
+                  </h4>
+                </div>
+                <p class="font-label-sm text-label-sm text-on-surface-variant">
+                  Ask questions about market trends or specific artists in your
+                  collection.
+                </p>
+                <div
+                  class="mt-2 bg-surface p-3 rounded-lg border border-white/5 flex items-center justify-between cursor-text"
+                >
+                  <span
+                    class="font-label-sm text-label-sm text-on-surface-variant/50"
+                    >"Analyze my latest..."</span
+                  >
+                  <button class="text-tertiary">
+                    <span
+                      class="material-symbols-outlined"
+                      style="font-size: 18px"
+                      >send</span
+                    >
+                  </button>
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </main>
+      <!-- BottomNavBar for Mobile (Mockup concept as requested by shared components logic) -->
+      <nav
+        class="md:hidden fixed bottom-0 w-full bg-surface/90 backdrop-blur-xl border-t border-white/5 flex justify-around items-center h-16 z-50 px-4 pb-safe"
+      >
+        <a class="flex flex-col items-center gap-1 text-tertiary" href="#">
+          <span
+            class="material-symbols-outlined"
+            style="font-variation-settings: &quot;FILL&quot; 1"
+            >dashboard</span
+          >
+          <span class="font-label-sm text-[10px]">Overview</span>
+        </a>
+        <a
+          class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-on-surface"
+          href="#"
+        >
+          <span class="material-symbols-outlined">explore</span>
+          <span class="font-label-sm text-[10px]">Explore</span>
+        </a>
+        <a
+          class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-on-surface"
+          href="#"
+        >
+          <span class="material-symbols-outlined">query_stats</span>
+          <span class="font-label-sm text-[10px]">Analysis</span>
+        </a>
+        <a
+          class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-on-surface"
+          href="#"
+        >
+          <span class="material-symbols-outlined">smart_toy</span>
+          <span class="font-label-sm text-[10px]">Chat</span>
+        </a>
+      </nav>
+      <!-- Footer -->
+      <footer
+        class="w-full py-12 bg-surface-container-lowest border-t border-white/5 mt-auto hidden md:block"
+      >
+        <div
+          class="max-w-container-max mx-auto px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-4"
+        >
+          <div class="font-headline-md text-headline-md text-primary">
+            ArtMind AI
+          </div>
+          <div
+            class="flex gap-6 font-label-sm text-label-sm text-on-surface-variant"
+          >
+            <a
+              class="hover:text-primary transition-colors opacity-80 hover:opacity-100"
+              href="#"
+              >Privacy Policy</a
+            >
+            <a
+              class="hover:text-primary transition-colors opacity-80 hover:opacity-100"
+              href="#"
+              >Terms of Service</a
+            >
+            <a
+              class="hover:text-primary transition-colors opacity-80 hover:opacity-100"
+              href="#"
+              >Artist Guidelines</a
+            >
+          </div>
+          <div class="font-label-sm text-label-sm text-on-surface-variant">
+            © 2024 ArtMind AI. The future of curation.
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
