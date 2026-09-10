@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useAuth } from "../redux/AuthContext";
 import { paintings } from "../services/paintingApi";
@@ -10,6 +10,8 @@ import {
   getCollection,
   removeFromCollection,
 } from "../services/collectionApi";
+
+const PAGE_SIZE = 12;
 
 function useRevealOnScroll(refreshKey) {
   useEffect(() => {
@@ -65,6 +67,10 @@ export default function Gallery() {
   const [cats, setCats] = useState([]);
   const [active, setActive] = useState("");
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const directoryRef = useRef(null);
   const { user, loading: authLoading } = useAuth();
   const [authRequiredOpen, setAuthRequiredOpen] = useState(false);
   const [savedItemIds, setSavedItemIds] = useState(() => new Set());
@@ -93,13 +99,77 @@ export default function Gallery() {
   }, []);
 
   useEffect(() => {
+    let cancelled = false;
     setLoading(true);
 
-    paintings(active ? { category: active } : { sort: "-createdAt" })
-      .then((response) => setItems(response.data || []))
-      .catch(() => setItems([]))
-      .finally(() => setLoading(false));
-  }, [active]);
+    paintings({
+      page,
+      limit: PAGE_SIZE,
+      sort: "-createdAt",
+      ...(active ? { category: active } : {}),
+    })
+      .then((response) => {
+        if (cancelled) return;
+
+        const nextTotal = response.pagination?.total ?? 0;
+        const nextPages = response.pagination?.pages ?? Math.ceil(nextTotal / PAGE_SIZE);
+        const lastPage = Math.max(1, nextPages);
+
+        // Reload the last available page if the collection has become smaller.
+        if (page > lastPage) {
+          cancelled = true;
+          setPage(lastPage);
+          return;
+        }
+
+        setItems(response.data || []);
+        setTotal(nextTotal);
+        setTotalPages(nextPages);
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setItems([]);
+        setTotal(0);
+        setTotalPages(0);
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [active, page]);
+
+  const pageNumbers = useMemo(() => {
+    const start = Math.max(1, Math.min(page - 2, totalPages - 4));
+    const end = Math.min(totalPages, start + 4);
+    const numbers = [];
+
+    if (start > 1) numbers.push(1);
+    if (start > 2) numbers.push("start-ellipsis");
+    for (let number = start; number <= end; number += 1) {
+      numbers.push(number);
+    }
+    if (end < totalPages - 1) numbers.push("end-ellipsis");
+    if (end < totalPages) numbers.push(totalPages);
+
+    return numbers;
+  }, [page, totalPages]);
+
+  const handleCategoryChange = (categoryId) => {
+    if (categoryId === active) return;
+    setLoading(true);
+    setActive(categoryId);
+    setPage(1);
+  };
+
+  const handlePageChange = (nextPage) => {
+    if (loading || nextPage === page || nextPage < 1 || nextPage > totalPages) return;
+    setLoading(true);
+    setPage(nextPage);
+    directoryRef.current?.scrollIntoView({ behavior: "instant", block: "start" });
+  };
 
   const activeCategory = useMemo(
     () => cats.find((category) => category._id === active),
@@ -288,10 +358,9 @@ export default function Gallery() {
     window.location.assign(`${path}?redirect=${encodeURIComponent(redirect)}`);
   };
 
-  // Include loading + active so reveal safely re-initializes after every filter request,
-  // even when the returned artwork count stays the same or is zero.
+  // Re-initialize reveal after each category or page request, including equal-size pages.
   useRevealOnScroll(
-    `${loading ? "loading" : "ready"}-${active || "all"}-${items.length}`
+    `${loading ? "loading" : "ready"}-${active || "all"}-${page}-${items.length}`
   );
 
   return (
@@ -420,7 +489,7 @@ export default function Gallery() {
           <div className="mx-auto flex max-w-[1500px] items-center justify-between text-[7px] uppercase tracking-[0.28em] text-[#A39585]">
             <span>ART × MEMORY</span>
             <span className="hidden md:block">CURATED BY ARTMIND</span>
-            <span>{String(items.length).padStart(2, "0")} WORKS</span>
+            <span>{String(total).padStart(2, "0")} WORKS</span>
           </div>
         </div>
       </section>
@@ -436,7 +505,7 @@ export default function Gallery() {
 
           <button
             type="button"
-            onClick={() => setActive("")}
+            onClick={() => handleCategoryChange("")}
             aria-pressed={!active}
             className={`shrink-0 border-b px-1 py-2 text-[9px] font-bold uppercase tracking-[0.18em] transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9B2C2C] ${
               !active
@@ -454,7 +523,7 @@ export default function Gallery() {
               <button
                 key={category._id}
                 type="button"
-                onClick={() => setActive(category._id)}
+                onClick={() => handleCategoryChange(category._id)}
                 aria-pressed={isActive}
                 className={`shrink-0 border-b px-1 py-2 text-[9px] font-bold uppercase tracking-[0.18em] transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9B2C2C] ${
                   isActive
@@ -472,7 +541,7 @@ export default function Gallery() {
       {/* =====================================================
           3. ARTWORK DIRECTORY
       ===================================================== */}
-      <section className="bg-[#F7F4EF] px-6 py-24 md:px-12 md:py-28 lg:px-20">
+      <section ref={directoryRef} className="scroll-mt-40 bg-[#F7F4EF] px-6 py-24 md:px-12 md:py-28 lg:px-20">
         <div className="mx-auto max-w-[1450px]">
           <header
             data-reveal="rise"
@@ -503,7 +572,7 @@ export default function Gallery() {
 
             <div className="flex items-end gap-3">
               <span className="font-['Playfair_Display'] text-5xl font-normal leading-none text-[#9B2C2C] md:text-6xl">
-                {String(items.length).padStart(2, "0")}
+                {String(total).padStart(2, "0")}
               </span>
               <span className="pb-1 text-[8px] uppercase leading-4 tracking-[0.22em] text-[#7A6C63]">
                 hồ sơ
@@ -522,7 +591,7 @@ export default function Gallery() {
             </div>
           ) : items.length ? (
             <div
-              key={`gallery-${active || "all"}-${items.length}`}
+              key={`gallery-${active || "all"}-${page}-${items.length}`}
               data-reveal="soft"
               style={{ "--reveal-delay": "100ms" }}
             >
@@ -553,13 +622,70 @@ export default function Gallery() {
               </p>
               <button
                 type="button"
-                onClick={() => setActive("")}
+                onClick={() => handleCategoryChange("")}
                 className="group mt-8 inline-flex items-center gap-5 bg-[#D4AF37] px-6 py-4 text-[9px] font-bold uppercase tracking-[0.22em] text-[#2A2421] transition duration-300 hover:-translate-y-0.5 hover:bg-[#b89528] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9B2C2C]"
               >
                 XEM TẤT CẢ
                 <span className="transition-transform group-hover:translate-x-1">→</span>
               </button>
             </div>
+          )}
+
+          {!loading && totalPages > 1 && (
+            <nav
+              aria-label="Phân trang tác phẩm"
+              className="mt-16 flex flex-col items-center gap-6 border-t border-[#D8CFC0] pt-8"
+            >
+              <p role="status" className="text-center text-sm text-[#7A6C63]">
+                Hiển thị {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, total)} / {total} tác phẩm
+                <span className="ml-2">· Trang {page} / {totalPages}</span>
+              </p>
+
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => handlePageChange(page - 1)}
+                  disabled={page === 1}
+                  aria-label="Trang trước"
+                  className="min-h-11 border border-[#D8CFC0] px-4 text-sm text-[#524640] transition-colors hover:border-[#9B2C2C] hover:text-[#9B2C2C] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9B2C2C] disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  ← Trước
+                </button>
+
+                {pageNumbers.map((number) =>
+                  typeof number === "number" ? (
+                    <button
+                      key={number}
+                      type="button"
+                      onClick={() => handlePageChange(number)}
+                      aria-label={`Trang ${number}`}
+                      aria-current={page === number ? "page" : undefined}
+                      className={`grid h-11 min-w-11 place-items-center border px-3 text-sm transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9B2C2C] ${
+                        page === number
+                          ? "border-[#9B2C2C] bg-[#9B2C2C] text-[#F7F4EF]"
+                          : "border-[#D8CFC0] text-[#524640] hover:border-[#9B2C2C] hover:text-[#9B2C2C]"
+                      }`}
+                    >
+                      {number}
+                    </button>
+                  ) : (
+                    <span key={number} aria-hidden="true" className="px-1 text-[#7A6C63]">
+                      …
+                    </span>
+                  ),
+                )}
+
+                <button
+                  type="button"
+                  onClick={() => handlePageChange(page + 1)}
+                  disabled={page === totalPages}
+                  aria-label="Trang sau"
+                  className="min-h-11 border border-[#D8CFC0] px-4 text-sm text-[#524640] transition-colors hover:border-[#9B2C2C] hover:text-[#9B2C2C] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9B2C2C] disabled:cursor-not-allowed disabled:opacity-40"
+                >
+                  Sau →
+                </button>
+              </div>
+            </nav>
           )}
         </div>
       </section>
