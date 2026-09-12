@@ -303,6 +303,16 @@ export default function Navbar() {
                       XEM HỒ SƠ
                     </Link>
 
+                    <Link
+                      to="/orders"
+                      role="menuitem"
+                      onClick={() => setAccountOpen(false)}
+                      className="flex items-center gap-3 px-4 py-3 text-[10px] font-semibold tracking-[0.5px] text-[#42392f] transition hover:bg-[#f4ecdf] hover:text-[#9b6d2e]"
+                    >
+                      <span className="text-sm">▤</span>
+                      LỊCH SỬ ĐƠN HÀNG
+                    </Link>
+
                     <div className="mx-3 h-px bg-[#e8dfd1]" />
 
                     <button
