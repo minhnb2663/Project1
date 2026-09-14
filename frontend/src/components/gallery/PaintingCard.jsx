@@ -38,6 +38,59 @@ export default function PaintingCard({
     toast.success("Đã thêm vào giỏ hàng");
   };
 
+  const hasCollectionAction = Boolean(onAddToCollection || onRemoveFromCollection);
+  const isCollectionToggle = collectionMode === "toggle";
+
+  const handleCollectionAction = () => {
+    if (isCollectionPending) return;
+
+    if (collectionMode === "remove" || (isCollectionToggle && isSaved)) {
+      onRemoveFromCollection?.(item);
+      return;
+    }
+
+    onAddToCollection?.(item);
+  };
+
+  const collectionHeartButton = isCollectionToggle && hasCollectionAction ? (
+    <button
+      type="button"
+      onClick={handleCollectionAction}
+      disabled={isCollectionPending}
+      aria-pressed={isSaved}
+      aria-label={
+        isCollectionPending
+          ? "Đang cập nhật bộ sưu tập"
+          : isSaved
+            ? "Xóa khỏi bộ sưu tập"
+            : "Thêm vào bộ sưu tập"
+      }
+      title={isSaved ? "Xóa khỏi bộ sưu tập" : "Thêm vào bộ sưu tập"}
+      className={`group/heart grid h-[42px] w-[42px] shrink-0 place-items-center border transition duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9B2C2C] ${
+        isCollectionPending
+          ? "cursor-wait border-[#c3b398] text-[#9b8d7a] opacity-60"
+          : isSaved
+            ? "border-[#9B2C2C] bg-[#9B2C2C] text-[#F7F4EF] hover:bg-[#7f2323]"
+            : "border-[#9d8058] text-[#715433] hover:border-[#9B2C2C] hover:text-[#9B2C2C]"
+      }`}
+    >
+      <svg
+        viewBox="0 0 24 24"
+        aria-hidden="true"
+        className={`h-[18px] w-[18px] transition-transform duration-300 group-hover/heart:scale-110 ${
+          isCollectionPending ? "animate-pulse" : ""
+        }`}
+        fill={isSaved ? "currentColor" : "none"}
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z" />
+      </svg>
+    </button>
+  ) : null;
+
   return (
     <article className="group relative">
       {/* =====================================================
@@ -127,56 +180,63 @@ export default function PaintingCard({
               </b>
             </div>
 
-            {/* ADD CART */}
-            <button
-              type="button"
-              onClick={buy}
-              className="group/cart border border-[#9d8058] bg-[#302820] px-4 py-3 text-[8px] font-bold tracking-[1.5px] text-[#eaddc7] transition hover:bg-[#8b6c3f]"
-            >
-              <span className="mr-2 text-sm">＋</span>
-              GIỎ HÀNG
-            </button>
+            <div className="flex items-center gap-2">
+              {collectionHeartButton}
+
+              {/* ADD CART */}
+              <button
+                type="button"
+                onClick={buy}
+                className="group/cart border border-[#9d8058] bg-[#302820] px-4 py-3 text-[8px] font-bold tracking-[1.5px] text-[#eaddc7] transition hover:bg-[#8b6c3f]"
+              >
+                <span className="mr-2 text-sm">＋</span>
+                GIỎ HÀNG
+              </button>
+            </div>
           </div>
         )}
 
-        {(onAddToCollection || onRemoveFromCollection) && (
+        {isCollectionToggle &&
+          hasCollectionAction &&
+          (item.isAvailable === false || Number(item.price) <= 0) && (
+            <div className="mt-6 flex justify-end border-y border-[#bbaa8d] py-4">
+              {collectionHeartButton}
+            </div>
+          )}
+
+        {!isCollectionToggle && hasCollectionAction && (
           <button
             type="button"
-            disabled={isCollectionPending}
+            disabled={isCollectionPending || (collectionMode === "add" && isSaved)}
             aria-pressed={isSaved}
-            onClick={() => {
-              // Ở Gallery: chưa lưu => thêm, đã lưu => xóa.
-              // Ở CollectionPage: luôn là thao tác xóa.
-              if (collectionMode === "remove" || isSaved) {
-                onRemoveFromCollection?.(item);
-                return;
-              }
-
-              onAddToCollection?.(item);
-            }}
+            onClick={handleCollectionAction}
             className={`group/collection mt-5 flex w-full items-center justify-between border-b pb-4 text-left transition ${
               isCollectionPending
                 ? "cursor-wait border-[#c3b398] text-[#8b806f] opacity-60"
-                : collectionMode === "remove" || isSaved
-                  ? "border-[#c3b398] text-[#9B2C2C] hover:border-[#9B2C2C] hover:text-[#7f2323]"
-                  : "border-[#c3b398] text-[#766247] hover:border-[#8b6c3f] hover:text-[#8b6c3f]"
+                : collectionMode === "remove"
+                  ? "border-[#c3b398] text-[#9B2C2C] hover:border-[#9B2C2C]"
+                  : isSaved
+                    ? "cursor-default border-[#c3b398] text-[#8b806f]"
+                    : "border-[#c3b398] text-[#766247] hover:border-[#8b6c3f] hover:text-[#8b6c3f]"
             }`}
           >
             <span className="text-[8px] font-bold uppercase tracking-[2px]">
               {isCollectionPending
-                ? collectionMode === "remove" || isSaved
+                ? collectionMode === "remove"
                   ? "Đang xóa..."
                   : "Đang lưu..."
-                : collectionMode === "remove" || isSaved
-                  ? "Xóa khỏi bộ sưu tập"
-                  : "Thêm vào bộ sưu tập"}
+                : collectionMode === "remove"
+                  ? "Bỏ khỏi bộ sưu tập"
+                  : isSaved
+                    ? "Đã thêm vào bộ sưu tập"
+                    : "Thêm vào bộ sưu tập"}
             </span>
 
             <span
               aria-hidden="true"
               className="font-['Playfair_Display'] text-lg transition group-hover/collection:translate-x-1"
             >
-              {collectionMode === "remove" || isSaved ? "×" : "+"}
+              {collectionMode === "remove" ? "×" : isSaved ? "✓" : "+"}
             </span>
           </button>
         )}

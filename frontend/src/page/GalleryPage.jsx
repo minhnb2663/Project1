@@ -601,6 +601,7 @@ export default function Gallery() {
                 onRemoveFromCollection={handleRemoveFromCollection}
                 savedItemIds={savedItemIds}
                 pendingItemIds={pendingItemIds}
+                collectionMode="toggle"
               />
             </div>
           ) : (

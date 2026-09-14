@@ -531,39 +531,49 @@ export default function Home() {
           </header>
 
           <div className="grid gap-5 lg:grid-cols-12 lg:auto-rows-[345px]">
-            {works.map((work, index) => (
-              <article
-                key={index}
-                data-reveal="image"
-                className={`group relative bg-[#1C1715] shadow-[0_18px_50px_rgba(42,36,33,0.08)] transition-[transform,box-shadow] duration-700 ease-out hover:-translate-y-1.5 hover:shadow-[0_28px_70px_rgba(42,36,33,0.16)] ${galleryLayouts[index]}`}
-                style={{ "--reveal-delay": `${80 + index * 110}ms` }}
-              >
-                <div className={`reveal-media relative overflow-hidden bg-[#1C1715] ${galleryHeights[index]}`}>
-                  <img
-                    src={work.image}
-                    alt={work.title}
-                    className="h-full w-full object-cover transition duration-[1400ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.07] group-hover:rotate-[0.25deg]"
-                  />
+            {works.map((work, index) => {
+              const artworkId =
+                work.item?._id ||
+                work.item?.id ||
+                work.item?.painting?._id ||
+                work.item?.painting?.id;
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/5 to-transparent opacity-90 transition duration-500 group-hover:opacity-100" />
-                  <div className="absolute inset-3 border border-white/10 transition group-hover:border-white/25 md:inset-4" />
+              return (
+                <Link
+                  key={artworkId || index}
+                  to={artworkId ? `/paintings/${artworkId}` : "/gallery"}
+                  data-reveal="image"
+                  aria-label={`Xem chi tiết tác phẩm ${work.title}`}
+                  className={`group relative block cursor-pointer bg-[#1C1715] shadow-[0_18px_50px_rgba(42,36,33,0.08)] transition-[transform,box-shadow] duration-700 ease-out hover:-translate-y-1.5 hover:shadow-[0_28px_70px_rgba(42,36,33,0.16)] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D4AF37] focus-visible:ring-offset-4 focus-visible:ring-offset-[#ECE4D5] ${galleryLayouts[index]}`}
+                  style={{ "--reveal-delay": `${80 + index * 110}ms` }}
+                >
+                  <div className={`reveal-media relative overflow-hidden bg-[#1C1715] ${galleryHeights[index]}`}>
+                    <img
+                      src={work.image}
+                      alt={work.title}
+                      className="h-full w-full object-cover transition duration-[1400ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.07] group-hover:rotate-[0.25deg]"
+                    />
 
-                  <div className="absolute left-6 top-6 z-10 flex items-center gap-3 text-[8px] font-semibold uppercase tracking-[0.26em] text-white/70">
-                    <span className="h-px w-6 bg-[#D4AF37]" />0{index + 1}
-                  </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/5 to-transparent opacity-90 transition duration-500 group-hover:opacity-100" />
+                    <div className="absolute inset-3 border border-white/10 transition group-hover:border-white/25 md:inset-4" />
 
-                  <div className="absolute bottom-0 left-0 right-0 z-10 p-6 md:p-8">
-                    <h3 className="max-w-lg font-['Playfair_Display'] text-2xl font-medium leading-tight text-[#F7F4EF] md:text-3xl">
-                      {work.title}
-                    </h3>
-                    <div className="mt-3 flex items-center justify-between gap-4 border-t border-white/20 pt-3 text-[8px] uppercase tracking-[0.22em] text-white/55">
-                      <span>{work.artist}</span>
-                      <span>{work.year}</span>
+                    <div className="absolute left-6 top-6 z-10 flex items-center gap-3 text-[8px] font-semibold uppercase tracking-[0.26em] text-white/70">
+                      <span className="h-px w-6 bg-[#D4AF37]" />0{index + 1}
+                    </div>
+
+                    <div className="absolute bottom-0 left-0 right-0 z-10 p-6 md:p-8">
+                      <h3 className="max-w-lg font-['Playfair_Display'] text-2xl font-medium leading-tight text-[#F7F4EF] md:text-3xl">
+                        {work.title}
+                      </h3>
+                      <div className="mt-3 flex items-center justify-between gap-4 border-t border-white/20 pt-3 text-[8px] uppercase tracking-[0.22em] text-white/55">
+                        <span>{work.artist}</span>
+                        <span>{work.year}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </article>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
